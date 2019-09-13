@@ -20,7 +20,7 @@ def GET_ARGS():
 if __name__ == '__main__':
     args = GET_ARGS()
     fasta_in = args.fasta
-    group_file = args.group
+    query_in = args.group
     sp = args.name
     sp_list = sp.split()
 
