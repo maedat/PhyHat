@@ -13,7 +13,6 @@ def GET_ARGS():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f','--fasta',  help="File path to a fasta including all species sequence", required=True)
     parser.add_argument('-d','--group', help="Ortholog grouping file", required=True)
-    parser.add_argument('-n','--name',help="Species name in order (Space-separated)", type=str, required=True)
     return parser.parse_args()
 
 
@@ -22,21 +21,16 @@ if __name__ == '__main__':
     args = GET_ARGS()
     fasta_in = args.fasta
     query_in = args.group
-    sp = args.name
-    sp_list = sp.split()
+
 
     print(fasta_in)
     print(query_in)
-    print(sp_list)
 
 
     for q in open(query_in, "r"):
         query = re.split('[\t ,]',q)
         os.mkdir(query[0])
         os.chdir("./"+query[0])
-        fnex = open("iqtree.run.nex", 'w')
-        fnex.write("#nexus \n begin sets;\n")
-        
         
         f = open(query[0] +".fa", 'w')
         print("<" + query[0]+ ">")
@@ -53,9 +47,9 @@ if __name__ == '__main__':
                     f.write(str(fasta_seq))
         f.close()
         subprocess.run("prequal "+query[0] + ".fa", shell=True)
-        subprocess.run("mafft --auto " +query[0]+".fa.filtered"+" > "+query[0]+".fa.filtered.maffted.fa", shell=True)    
-        fnex.write("charset "+query[0]+" = "+query[0]+".fa.filtered.maffted.fa: ; \n ")
-        fnex.write("end;")
-        fnex.close()
-        subprocess.run("iqtree -sp iqtree.run.nex -nt AUTO -bb 1000", shell=True)
+        subprocess.run("mafft --auto " +query[0]+".fa.filtered"+" > "+query[0]+".fa.filtered.maffted.fa", shell=True) 
+        subprocess.run("mafft --auto " +query[0]+".fa" + " > "+query[0]+".trimal.fa", shell=True)
+        subprocess.run("trimal -in " +query[0]+".trimal.fa -out " +  query[0]+".trimal.maffted.fa -htmlout " + query[0]+".trimal.maffted.html  -automated1", shell=True)
+        subprocess.run("iqtree -nt AUTO -bb 1000  -pre \"prequel\" -s " + query[0]+".fa.filtered.maffted.fa", shell=True)
+        subprocess.run("iqtree -nt AUTO -bb 1000  -pre \"trimal\" -s " + query[0]+".trimal.maffted.fa", shell=True)
         os.chdir("../")
