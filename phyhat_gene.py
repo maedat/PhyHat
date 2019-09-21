@@ -6,7 +6,8 @@
 import argparse
 from Bio import SeqIO
 import subprocess
-
+import re
+import os
 
 def GET_ARGS():
     parser = argparse.ArgumentParser()
@@ -28,14 +29,18 @@ if __name__ == '__main__':
     print(query_in)
     print(sp_list)
 
-    fnex = open("iqtree.run.nex", 'w')
-    fnex.write("#nexus \n begin sets;\n")
 
     for q in open(query_in, "r"):
-        query = q.split()
-        f = open(query[0], 'w')
+        query = re.split('[\t ,]',q)
+        os.mkdir(query[0])
+        os.chdir("./"+query[0])
+        fnex = open("iqtree.run.nex", 'w')
+        fnex.write("#nexus \n begin sets;\n")
+        
+        
+        f = open(query[0] +".fa", 'w')
         print("<" + query[0]+ ">")
-        for record in SeqIO.parse(fasta_in, 'fasta'):
+        for record in SeqIO.parse("../" + fasta_in, 'fasta'):
             id_part = record.id
             desc_part = record.description
             seq = record.seq
@@ -47,22 +52,10 @@ if __name__ == '__main__':
                     print(desc_part)
                     f.write(str(fasta_seq))
         f.close()
-        print("<OTU rename>")
-        fsp = open(query[0] + ".sp.fa", 'w')
-        for record in SeqIO.parse(fasta_in, 'fasta'):
-            id_part = record.id
-            desc_part = record.description
-            seq = record.seq
-            for i in range(len(query)):
-                if desc_part == query[i] :
-                    print(sp_list[i-1])
-                    fasta_seq = '>' + sp_list[i-1] + '\n' + seq.rstrip("*") + '\n'
-                    fsp.write(str(fasta_seq))
-        fsp.close()    
-        subprocess.run("prequal "+query[0] + ".sp.fa", shell=True)
-        subprocess.run("mafft --auto "+query[0]+".sp.fa.filtered"+" > "+query[0]+".sp.fa.filtered.maffted.fa", shell=True)    
-        fnex.write("charset "+query[0]+" = "+query[0]+".sp.fa.filtered.maffted.fa: ; \n ")
-    fnex.write("end;")
-    fnex.close()
-
-    subprocess.run("iqtree -sp iqtree.run.nex -nt AUTO -bb 1000", shell=True)
+        subprocess.run("prequal "+query[0] + ".fa", shell=True)
+        subprocess.run("mafft --auto " +query[0]+".fa.filtered"+" > "+query[0]+".fa.filtered.maffted.fa", shell=True)    
+        fnex.write("charset "+query[0]+" = "+query[0]+".fa.filtered.maffted.fa: ; \n ")
+        fnex.write("end;")
+        fnex.close()
+        subprocess.run("iqtree -sp iqtree.run.nex -nt AUTO -bb 1000", shell=True)
+        os.chdir("../")
