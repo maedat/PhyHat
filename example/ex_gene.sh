@@ -1,0 +1,1 @@
+../phyhat_gene.py -f ex_gene.fa -g ex_gene.db -n "SpA SpB SpC SpD spE"
