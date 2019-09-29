@@ -8,21 +8,51 @@ PhyHat is a pipeline for the ML-tree construction with Mafft aligenment, Prequel
 Python 3.7. (Biopython, pandas, argparse)
 
 ## Usage
+phyhat.py (for species tree construction from multiple gene set)
+
 ```sh
 usage: phyhat.py [-h] -f FASTA -d GROUP -n NAME
 
 optional arguments:
--h, --help            show this help message and exit
--f FASTA, --fasta FASTA
-File path to a fasta including all species sequence
--d GROUP, --group GROUP
-Ortholog grouping file
--n NAME, --name NAME  Species name in order (Space-separated)
-
+  -h, --help            show this help message and exit
+  -f FASTA, --fasta FASTA
+                        File path to a fasta including all species sequence
+  -d GROUP, --group GROUP
+                        Ortholog grouping file
+  -n NAME, --name NAME  Species name in order (Space-separated)
 ```
+
+phyhat_gene.py (for gene tree construction for each homolog group)
+
+```sh
+usage: phyhat_gene.py [-h] -f FASTA -d GROUP [-n NAME]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FASTA, --fasta FASTA
+                        File path to a fasta including all species sequence
+  -d GROUP, --group GROUP
+                        Ortholog grouping file
+  -n NAME, --name NAME  Species names in order (Space-separated)
+```
+
+
 
 ## Demo
-```sh
 
+phyhat.py
+
+```sh
+cd ../example 
+../phyhat.py -f ex_species.fa -d ex_species.db -n "SpA SpB SpC SpD SpE"
 
 ```
+
+phyhat_gene.py
+
+```sh
+cd ../example 
+../phyhat_gene.py -f ex_gene.fa -d ex_gene.db -n "SpA SpB SpC SpD SpE"
+
+```
+
