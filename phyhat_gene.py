@@ -1,7 +1,23 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# coding: UTF-8
 
-#python >3.5
+# 
+# ======================================================================
+# Project Name    : PhyHat
+# File Name       : phyhat_gene.py
+# Version       : 1.0.0
+# Encoding        : python
+# Creation Date   : 2019/09/1
+# Author : Taro Maeda 
+# license     MIT License (http://opensource.org/licenses/mit-license.php)
+# Copyright (c) 2019 Taro Maeda
+# ======================================================================
+# 
+
+
+
+
+
 
 import argparse
 from Bio import SeqIO
@@ -48,7 +64,7 @@ if __name__ == '__main__':
                                     if desc_part == query_each[j].rstrip():
                                         seq_m=str(seq).replace("*", "")
                                         seq_m=seq_m.replace(".", "")
-                                        fasta_seq = '>' + desc_part + "_("+sp_name+")"+ '\n' + seq_m + '\n'
+                                        fasta_seq = '>' + desc_part + "_"+sp_name+ '\n' + seq_m + '\n'
                                         print(desc_part)
                                         f.write(str(fasta_seq))
             elif sp=="NoFile":
@@ -70,8 +86,8 @@ if __name__ == '__main__':
                             
             subprocess.run("prequal "+QUERY + ".fa", shell=True)
             subprocess.run("mafft --auto " +QUERY+".fa.filtered"+" > "+QUERY+".fa.filtered.maffted.fa", shell=True)
-            subprocess.run("mafft --auto " +QUERY+".fa"+ " > "+QUERY+".trimal.fa", shell=True)
-            subprocess.run("trimal -in " +QUERY+".trimal.fa -out " +  QUERY+".trimal.maffted.fa -htmlout " + QUERY+".trimal.maffted.html  -automated1", shell=True)
+            subprocess.run("mafft --auto " +QUERY+".fa" + " > "+QUERY+".maffted.fa", shell=True)
+            subprocess.run("trimal -in " +QUERY+".maffted.fa -out " +  QUERY+".maffted.trimal.fa -htmlout " + QUERY+".trimal.maffted.html  -automated1", shell=True)
             subprocess.run("iqtree -nt AUTO -bb 1000  -pre \"prequel\" -s " + QUERY+".fa.filtered.maffted.fa", shell=True)
-            subprocess.run("iqtree -nt AUTO -bb 1000  -pre \"trimal\" -s " + QUERY+".trimal.maffted.fa", shell=True)
+            subprocess.run("iqtree -nt AUTO -bb 1000  -pre \"trimal\" -s " + QUERY+".maffted.trimal.fa", shell=True)
             os.chdir("../")

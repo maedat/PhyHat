@@ -1,11 +1,28 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
+# coding: UTF-8
 
-#python >3.5
+# 
+# ======================================================================
+# Project Name    : PhyHat
+# File Name       : phyhat.py
+# Version       : 1.0.0
+# Encoding        : python
+# Creation Date   : 2019/09/1
+# Author : Taro Maeda 
+# license     MIT License (http://opensource.org/licenses/mit-license.php)
+# Copyright (c) 2019 Taro Maeda
+# ======================================================================
+# 
+
+
+
+
 
 import argparse
 from Bio import SeqIO
 import subprocess
+import re
+import os
 
 
 def GET_ARGS():
@@ -33,9 +50,13 @@ if __name__ == '__main__':
 
     for q in open(query_in, "r"):
         query = q.split()
-        f = open(query[0], 'w')
-        print("<" + query[0]+ ">")
-        for record in SeqIO.parse(fasta_in, 'fasta'):
+        QUERY = query[0].replace("|", "_")
+        if not os.path.exists(QUERY):
+            os.mkdir(QUERY)
+        os.chdir("./"+QUERY)
+        f = open(QUERY + ".fa", 'w')
+        print("<" + QUERY+ ">")
+        for record in SeqIO.parse("../" + fasta_in, 'fasta'):
             id_part = record.id
             desc_part = record.description
             seq = record.seq
@@ -48,8 +69,8 @@ if __name__ == '__main__':
                     f.write(str(fasta_seq))
         f.close()
         print("<OTU rename>")
-        fsp = open(query[0] + ".sp.fa", 'w')
-        for record in SeqIO.parse(fasta_in, 'fasta'):
+        fsp = open(QUERY+ ".sp.fa", 'w')
+        for record in SeqIO.parse("../" +fasta_in, 'fasta'):
             id_part = record.id
             desc_part = record.description
             seq = record.seq
@@ -58,10 +79,11 @@ if __name__ == '__main__':
                     print(sp_list[i-1])
                     fasta_seq = '>' + sp_list[i-1] + '\n' + seq.rstrip("*") + '\n'
                     fsp.write(str(fasta_seq))
-        fsp.close()    
-        subprocess.run("prequal "+query[0] + ".sp.fa", shell=True)
-        subprocess.run("mafft --auto "+query[0]+".sp.fa.filtered"+" > "+query[0]+".sp.fa.filtered.maffted.fa", shell=True)    
-        fnex.write("charset "+query[0]+" = "+query[0]+".sp.fa.filtered.maffted.fa: ; \n ")
+        fsp.close()
+        subprocess.run("prequal "+QUERY + ".sp.fa", shell=True)
+        subprocess.run("mafft --auto "+QUERY+".sp.fa.filtered"+" > "+QUERY+".sp.fa.filtered.maffted.fa", shell=True)
+        os.chdir("../")
+        fnex.write("charset "+QUERY+" = "+ QUERY +"/" + QUERY+".sp.fa.filtered.maffted.fa: ; \n ")
     fnex.write("end;")
     fnex.close()
 
