@@ -10,13 +10,13 @@ Python 3.7. (Biopython, pandas, argparse)
 ## Usage
 -phyhat.py (for species tree construction from multiple gene set)
 
--iptree (http://www.iqtree.org)
+- [iptree](http://www.iqtree.org)
 
--[mafft] (https://mafft.cbrc.jp/alignment/software/)
+- [mafft](https://mafft.cbrc.jp/alignment/software/)
 
--[PREQUAL] (https://github.com/simonwhelan/prequal)
+- [PREQUAL](https://github.com/simonwhelan/prequal)
 
--[trimal] (http://trimal.cgenomics.org)
+- [trimal](http://trimal.cgenomics.org)
 
 ```sh
 usage: phyhat.py [-h] -f FASTA -d GROUP -n NAME
@@ -70,4 +70,4 @@ cd ../example
 
 ## Author
 
-[Taro Maeda](https://github.c
+[Taro Maeda](https://github.com/maedat)
