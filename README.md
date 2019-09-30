@@ -5,10 +5,7 @@
 PhyHat is a pipeline for the ML-tree construction with Mafft aligenment, Prequel ambigouse base masking and Iq-tree tree construction. 
 
 ## Requirement
-Python 3.7. (Biopython, pandas, argparse)
-
-## Usage
--phyhat.py (for species tree construction from multiple gene set)
+- Python 3.7. (Biopython, pandas, argparse)
 
 - [iptree](http://www.iqtree.org)
 
@@ -17,6 +14,9 @@ Python 3.7. (Biopython, pandas, argparse)
 - [PREQUAL](https://github.com/simonwhelan/prequal)
 
 - [trimal](http://trimal.cgenomics.org)
+
+## Usage
+-phyhat.py (for species tree construction from multiple gene set)
 
 ```sh
 usage: phyhat.py [-h] -f FASTA -d GROUP -n NAME
