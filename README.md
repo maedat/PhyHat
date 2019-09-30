@@ -56,3 +56,10 @@ cd ../example
 
 ```
 
+## Licence
+
+[MIT License](http://opensource.org/licenses/mit-license.php)
+
+## Author
+
+[Taro Maeda](https://github.c
