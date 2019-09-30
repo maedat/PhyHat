@@ -8,11 +8,15 @@ PhyHat is a pipeline for the ML-tree construction with Mafft aligenment, Prequel
 Python 3.7. (Biopython, pandas, argparse)
 
 ## Usage
-phyhat.py (for species tree construction from multiple gene set)
-iptree (http://www.iqtree.org)
-mafft (https://mafft.cbrc.jp/alignment/software/)
-PREQUAL (https://github.com/simonwhelan/prequal)
-trimal (http://trimal.cgenomics.org)
+-phyhat.py (for species tree construction from multiple gene set)
+
+-iptree (http://www.iqtree.org)
+
+-[mafft] (https://mafft.cbrc.jp/alignment/software/)
+
+-[PREQUAL] (https://github.com/simonwhelan/prequal)
+
+-[trimal] (http://trimal.cgenomics.org)
 
 ```sh
 usage: phyhat.py [-h] -f FASTA -d GROUP -n NAME
