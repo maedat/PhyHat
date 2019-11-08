@@ -45,7 +45,7 @@ if __name__ == '__main__':
     print(query_in)
     print(sp_list)
 
-    fnex = open("iqtree.run.nex", 'w')
+    fnex = open("iqtree.run.prequel.nex", 'w')
     fnex.write("#nexus \n begin sets;\n")
 
     for q in open(query_in, "r"):
@@ -86,5 +86,58 @@ if __name__ == '__main__':
         fnex.write("charset "+QUERY+" = "+ QUERY +"/" + QUERY+".sp.fa.filtered.maffted.fa: ; \n ")
     fnex.write("end;")
     fnex.close()
+    
+    
+    fnex = open("iqtree.run.trimal.nex", 'w')
+    fnex.write("#nexus \n begin sets;\n")
 
-    subprocess.run("iqtree -sp iqtree.run.nex -nt AUTO -bb 1000", shell=True)
+    for q in open(query_in, "r"):
+        query = q.split()
+        QUERY = query[0].replace("|", "_")
+        if not os.path.exists(QUERY):
+            os.mkdir(QUERY)
+        os.chdir("./"+QUERY)
+        f = open(QUERY + ".fa", 'w')
+        print("<" + QUERY+ ">")
+        for record in SeqIO.parse("../" + fasta_in, 'fasta'):
+            id_part = record.id
+            desc_part = record.description
+            seq = record.seq
+            for i in range(len(query)):
+                if desc_part == query[i] :
+                    seq_m=str(seq).replace("*", "")
+                    seq_m=seq_m.replace(".", "")
+                    fasta_seq = '>' + desc_part + '\n' + seq_m + '\n'
+                    print(desc_part)
+                    f.write(str(fasta_seq))
+        f.close()
+        print("<OTU rename>")
+        fsp = open(QUERY+ ".sp.fa", 'w')
+        for record in SeqIO.parse("../" +fasta_in, 'fasta'):
+            id_part = record.id
+            desc_part = record.description
+            seq = record.seq
+            for i in range(len(query)):
+                if desc_part == query[i] :
+                    print(sp_list[i-1])
+                    fasta_seq = '>' + sp_list[i-1] + '\n' + seq.rstrip("*") + '\n'
+                    fsp.write(str(fasta_seq))
+        fsp.close()
+        subprocess.run("mafft --auto "+QUERY+".sp.fa"+" > "+QUERY+".sp.maffted.fa", shell=True)
+        subprocess.run("trimal -in " +QUERY+".sp.maffted.fa -out " +  QUERY+".sp.maffted.trimal.fa -htmlout " + QUERY+".sp.maffted.trimal.html  -automated1", shell=True)
+        os.chdir("../")
+        fnex.write("charset "+QUERY+" = "+ QUERY +"/" +  QUERY+".sp.maffted.trimal.fa: ; \n ")
+    fnex.write("end;")
+    fnex.close()
+    
+    
+    
+    
+
+    subprocess.run("iqtree -sp iqtree.run.prequel.nex -pre \"prequel\" -nt AUTO -bb 1000", shell=True)
+    subprocess.run("iqtree -sp iqtree.run.trimal.nex -pre \"trimal\" -nt AUTO -bb 1000", shell=True)
+    
+    
+    
+    
+    
